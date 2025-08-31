@@ -1,0 +1,62 @@
+module sync_ram (
+    input clk,                 // clock
+    input we,                  // write enable
+    input [3:0] addr,          // 4-bit address = 16 locations
+    input [7:0] din,           // 8-bit data input
+    output reg [7:0] dout      // 8-bit data output
+);
+
+    reg [7:0] mem [0:15];      // 16 x 8-bit RAM
+
+    always @(posedge clk) begin
+        if (we) begin
+            mem[addr] <= din;  // Write operation
+        end else begin
+            dout <= mem[addr]; // Read operation
+        end
+    end
+endmodule
+
+
+
+//TESTBENCH
+
+module tb_sync_ram;
+    reg clk;
+    reg we;
+    reg [3:0] addr;
+    reg [7:0] din;
+    wire [7:0] dout;
+
+    // Instantiate RAM
+    sync_ram uut (
+        .clk(clk),
+        .we(we),
+        .addr(addr),
+        .din(din),
+        .dout(dout)
+    );
+
+    // Clock generation
+    always #5 clk = ~clk;
+
+    initial begin
+        // Initialize
+        clk = 0;
+        we  = 0;
+        addr = 0;
+        din = 0;
+
+        // Write data into RAM
+        #10 we = 1; addr = 4'b0001; din = 8'hA5; // write A5 at address 1
+        #10 we = 1; addr = 4'b0010; din = 8'h3C; // write 3C at address 2
+        #10 we = 1; addr = 4'b0011; din = 8'h7F; // write 7F at address 3
+
+        // Read data from RAM
+        #10 we = 0; addr = 4'b0001;              // read from address 1
+        #10 we = 0; addr = 4'b0010;              // read from address 2
+        #10 we = 0; addr = 4'b0011;              // read from address 3
+
+        #20 $stop;
+    end
+endmodule
