@@ -36,3 +36,6 @@ The implementation and simulation were carried out using Xilinx Vivado, which is
 The write operation was tested by applying a clock signal, setting the write enable high, and providing input data and address lines.
 
 The read operation was tested by enabling the read signal and checking that the correct data appears on the output
+
+//SIMULATION OUTPUT
+<img width="1904" height="1073" alt="Image" src="https://github.com/user-attachments/assets/42fa933d-97fd-4bd7-a061-b92d0a540607" />
